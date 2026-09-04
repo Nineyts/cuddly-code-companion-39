@@ -432,6 +432,26 @@ function Index() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {aba !== "metas" && (
+        <button
+          type="button"
+          onClick={() => setAba("metas")}
+          className="fixed bottom-5 right-5 z-50 animate-in fade-in slide-in-from-bottom-4 rounded-2xl border border-success/40 bg-card px-5 py-4 text-left shadow-lg transition-transform duration-300 hover:scale-105 motion-safe:animate-bounce"
+        >
+          <span className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            {metas.sonhoNome || "Sua meta"}
+          </span>
+          <span className="mt-1 block text-lg font-bold text-success">
+            {pctSonho >= 100
+              ? "Meta conquistada!"
+              : `Faltam ${moeda(Math.max(0, metas.sonhoValor - metas.sonhoGuardado))}`}
+          </span>
+          <span className="mt-1 block text-xs text-muted-foreground">
+            Toque para ver suas metas
+          </span>
+        </button>
+      )}
     </main>
   );
 }

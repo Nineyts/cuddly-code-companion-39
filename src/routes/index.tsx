@@ -260,7 +260,7 @@ function Index() {
                     ? `Parabéns! Você ficou dentro da meta diária e sobraram ${moeda(
                         metas.gastoDiario - dia.gastos,
                       )}.`
-                    `: ""`}
+                    : ""}
                   {dia.gastos > metas.gastoDiario
                     ? `Você passou ${moeda(
                         dia.gastos - metas.gastoDiario,

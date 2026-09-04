@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Emprestimos } from "@/components/Emprestimos";
 import { BotaoTema } from "@/components/BotaoTema";
+import { Login, useUsuario } from "@/components/Login";
 import {
   hojeISO,
   inicioDaSemanaISO,
@@ -46,6 +47,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { nome, pronto: usuarioPronto, entrar, sair } = useUsuario();
   const { estado, pronto, adicionar, remover, salvarMetas, guardar } = useFinancas();
   const hoje = hojeISO();
   const semana = inicioDaSemanaISO();

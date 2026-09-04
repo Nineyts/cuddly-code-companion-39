@@ -440,7 +440,7 @@ function Index() {
           aria-label="Ver metas"
           className="fixed bottom-6 right-6 z-50 h-32 w-32 animate-in fade-in zoom-in rounded-full p-[6px] shadow-lg transition-transform duration-300 hover:scale-105 motion-safe:animate-pulse"
           style={{
-            background: `conic-gradient(hsl(var(--success)) ${Math.min(100, pctSonho) * 3.6}deg, hsl(var(--muted)) 0deg)`,
+            background: `conic-gradient(var(--success) ${Math.min(100, pctSonho) * 3.6}deg, var(--muted) 0deg)`,
           }}
         >
           <span className="flex h-full w-full flex-col items-center justify-center gap-0.5 rounded-full bg-card px-2 text-center">

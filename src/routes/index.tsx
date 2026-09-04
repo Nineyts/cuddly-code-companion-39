@@ -49,11 +49,12 @@ function Index() {
   const hoje = hojeISO();
   const semana = inicioDaSemanaISO();
 
-  const [tipo, setTipo] = useState<Tipo>("gasto");
-  const [descricao, setDescricao] = useState("");
-  const [valor, setValor] = useState("");
-  const [data, setData] = useState(hoje);
-  const [aporte, setAporte] = useState("");
+  const [aba, setAba] = useRascunho("aba", "registrar");
+  const [tipo, setTipo] = useRascunho<Tipo>("tipo", "gasto");
+  const [descricao, setDescricao] = useRascunho("descricao", "");
+  const [valor, setValor] = useRascunho("valor", "");
+  const [data, setData] = useRascunho("data", hoje);
+  const [aporte, setAporte] = useRascunho("aporte", "");
 
   const dia = useMemo(
     () => resumo(estado.lancamentos, (l) => l.data === hoje),

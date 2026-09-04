@@ -51,7 +51,7 @@ function calcular(valor: number, dias: number) {
 
 function somaDias(iso: string, n: number) {
   const [a, m, d] = iso.split("-").map(Number);
-  const dt = new Date(a, (m || 1) - 1, d || 1);
+  const dt = new Date(a ?? 2026, (m ?? 1) - 1, d ?? 1);
   dt.setDate(dt.getDate() + n);
   return hojeISO(dt);
 }

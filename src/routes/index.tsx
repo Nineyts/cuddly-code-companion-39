@@ -437,18 +437,24 @@ function Index() {
         <button
           type="button"
           onClick={() => setAba("metas")}
-          className="fixed bottom-5 right-5 z-50 animate-in fade-in slide-in-from-bottom-4 rounded-2xl border border-success/40 bg-card px-5 py-4 text-left shadow-lg transition-transform duration-300 hover:scale-105 motion-safe:animate-bounce"
+          aria-label="Ver metas"
+          className="fixed bottom-6 right-6 z-50 h-32 w-32 animate-in fade-in zoom-in rounded-full p-[6px] shadow-lg transition-transform duration-300 hover:scale-105 motion-safe:animate-pulse"
+          style={{
+            background: `conic-gradient(hsl(var(--success)) ${Math.min(100, pctSonho) * 3.6}deg, hsl(var(--muted)) 0deg)`,
+          }}
         >
-          <span className="block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            {metas.sonhoNome || "Sua meta"}
-          </span>
-          <span className="mt-1 block text-lg font-bold text-success">
-            {pctSonho >= 100
-              ? "Meta conquistada!"
-              : `Faltam ${moeda(Math.max(0, metas.sonhoValor - metas.sonhoGuardado))}`}
-          </span>
-          <span className="mt-1 block text-xs text-muted-foreground">
-            Toque para ver suas metas
+          <span className="flex h-full w-full flex-col items-center justify-center gap-0.5 rounded-full bg-card px-2 text-center">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Falta
+            </span>
+            <span className="text-sm font-bold leading-tight text-success">
+              {pctSonho >= 100
+                ? "Conquistada!"
+                : moeda(Math.max(0, metas.sonhoValor - metas.sonhoGuardado))}
+            </span>
+            <span className="text-[10px] text-muted-foreground">
+              {Math.round(Math.min(100, pctSonho))}%
+            </span>
           </span>
         </button>
       )}

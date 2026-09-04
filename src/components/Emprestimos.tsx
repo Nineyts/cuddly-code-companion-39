@@ -16,7 +16,6 @@ import {
 import { toast } from "sonner";
 import { moeda, hojeISO } from "@/lib/finance";
 
-const JUROS = 0.4;
 const CHAVE = "emprestimos-v2";
 
 type Modo = "dia" | "semana";
@@ -32,6 +31,7 @@ type Emprestimo = {
   id: string;
   pessoa: string;
   valor: number;
+  juros: number;
   dias: number;
   modo: Modo;
   inicio: string;
@@ -39,8 +39,8 @@ type Emprestimo = {
   criadoEm: number;
 };
 
-function calcular(valor: number, dias: number) {
-  const total = valor * (1 + JUROS);
+function calcular(valor: number, dias: number, jurosPct: number) {
+  const total = valor * (1 + jurosPct / 100);
   const juros = total - valor;
   const d = Math.max(1, dias);
   const porDia = total / d;
@@ -56,8 +56,14 @@ function somaDias(iso: string, n: number) {
   return hojeISO(dt);
 }
 
-function gerarParcelas(valor: number, dias: number, modo: Modo, inicio: string): Parcela[] {
-  const c = calcular(valor, dias);
+function gerarParcelas(
+  valor: number,
+  dias: number,
+  modo: Modo,
+  inicio: string,
+  jurosPct: number,
+): Parcela[] {
+  const c = calcular(valor, dias, jurosPct);
   if (modo === "dia") {
     return Array.from({ length: Math.max(1, dias) }, (_, i) => ({
       n: i + 1,
@@ -79,13 +85,13 @@ function dataBR(iso: string) {
   return `${d}/${m}/${a}`;
 }
 
-function textoResumo(valor: number, dias: number, pessoa?: string) {
-  const c = calcular(valor, dias);
+function textoResumo(valor: number, dias: number, jurosPct: number, pessoa?: string) {
+  const c = calcular(valor, dias, jurosPct);
   return [
     "SIMULAÇÃO DE EMPRÉSTIMO",
     pessoa ? `Pessoa: ${pessoa}` : null,
     `Valor emprestado: ${moeda(valor)}`,
-    `Juros: 40% (${moeda(c.juros)})`,
+    `Juros: ${jurosPct}% (${moeda(c.juros)})`,
     `Total a pagar: ${moeda(c.total)}`,
     `Prazo: ${dias} dias`,
     `Pagamento por dia: ${moeda(c.porDia)}`,
@@ -101,6 +107,7 @@ export function Emprestimos() {
   const [pessoa, setPessoa] = useState("");
   const [valor, setValor] = useState("300");
   const [dias, setDias] = useState("20");
+  const [jurosPct, setJurosPct] = useState("40");
   const [modo, setModo] = useState<Modo>("dia");
   const [inicio, setInicio] = useState(hojeISO());
   const [aberto, setAberto] = useState<string | null>(null);
@@ -124,7 +131,8 @@ export function Emprestimos() {
 
   const v = Number(valor.replace(",", ".")) || 0;
   const d = Number(dias) || 0;
-  const c = useMemo(() => calcular(v, d), [v, d]);
+  const j = Number(jurosPct.replace(",", ".")) || 0;
+  const c = useMemo(() => calcular(v, d, j), [v, d, j]);
 
   const lembretes = useMemo(() => {
     const hojeItens: { nome: string; valor: number }[] = [];
@@ -156,10 +164,11 @@ export function Emprestimos() {
       id: crypto.randomUUID(),
       pessoa: pessoa.trim(),
       valor: v,
+      juros: j,
       dias: d,
       modo,
       inicio,
-      parcelas: gerarParcelas(v, d, modo, inicio),
+      parcelas: gerarParcelas(v, d, modo, inicio, j),
       criadoEm: Date.now(),
     };
     setLista((s) => [novo, ...s]);
@@ -189,7 +198,7 @@ export function Emprestimos() {
   }
 
   async function compartilharTexto() {
-    const texto = textoResumo(v, d, pessoa.trim() || undefined);
+    const texto = textoResumo(v, d, j, pessoa.trim() || undefined);
     try {
       if (navigator.share) {
         await navigator.share({ title: "Simulação de empréstimo", text: texto });
@@ -203,7 +212,7 @@ export function Emprestimos() {
   }
 
   function baixarTexto() {
-    const blob = new Blob([textoResumo(v, d, pessoa.trim() || undefined)], {
+    const blob = new Blob([textoResumo(v, d, j, pessoa.trim() || undefined)], {
       type: "text/plain;charset=utf-8",
     });
     const a = document.createElement("a");
@@ -230,7 +239,7 @@ export function Emprestimos() {
     ctx.fillStyle = "#facc15";
     ctx.fillRect(50, 110, 200, 6);
     ctx.font = "26px system-ui, sans-serif";
-    const linhas = textoResumo(v, d, pessoa.trim() || undefined).split("\n").slice(1);
+    const linhas = textoResumo(v, d, j, pessoa.trim() || undefined).split("\n").slice(1);
     linhas.forEach((linha, i) => {
       ctx.fillStyle = i === linhas.length - 3 ? "#4ade80" : "#e2e8f0";
       ctx.fillText(linha, 50, 190 + i * 52);
@@ -274,7 +283,7 @@ export function Emprestimos() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Novo empréstimo (juros de 40%)</CardTitle>
+          <CardTitle>Novo empréstimo</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-6">
           <div className="grid gap-4 sm:grid-cols-3">
@@ -303,6 +312,15 @@ export function Emprestimos() {
                 inputMode="numeric"
                 value={dias}
                 onChange={(e) => setDias(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="jurosEmp">Juros (%)</Label>
+              <Input
+                id="jurosEmp"
+                inputMode="decimal"
+                value={jurosPct}
+                onChange={(e) => setJurosPct(e.target.value)}
               />
             </div>
             <div className="grid gap-2">
@@ -336,7 +354,7 @@ export function Emprestimos() {
           </div>
 
           <div className="grid gap-3 rounded-lg border bg-muted/40 p-4 sm:grid-cols-2">
-            <Item rotulo="Juros (40%)" valor={moeda(c.juros)} />
+            <Item rotulo={`Juros (${j}%)`} valor={moeda(c.juros)} />
             <Item rotulo="Total a pagar" valor={moeda(c.total)} destaque />
             <Item rotulo="Pagamento por dia" valor={moeda(c.porDia)} destaque />
             <Item
@@ -400,7 +418,8 @@ export function Emprestimos() {
                         <TableCell className="font-medium">
                           {e.pessoa || "Sem nome"}
                           <span className="block text-xs text-muted-foreground">
-                            {e.dias} dias · {e.modo === "dia" ? "diário" : "semanal"}
+                            {e.dias} dias · {e.modo === "dia" ? "diário" : "semanal"} ·{" "}
+                            {e.juros ?? 40}% juros
                           </span>
                         </TableCell>
                         <TableCell>{moeda(e.valor)}</TableCell>

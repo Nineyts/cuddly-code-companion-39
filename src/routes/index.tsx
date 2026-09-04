@@ -438,21 +438,21 @@ function Index() {
           type="button"
           onClick={() => setAba("metas")}
           aria-label="Ver metas"
-          className="fixed bottom-6 right-6 z-50 h-16 w-16 animate-in fade-in zoom-in rounded-full p-[3px] shadow-lg transition-transform duration-300 hover:scale-105 motion-safe:animate-pulse"
+          className="fixed bottom-6 right-6 z-50 h-20 w-20 animate-in fade-in zoom-in rounded-full p-1 shadow-lg transition-transform duration-300 hover:scale-105 motion-safe:animate-pulse"
           style={{
             background: `conic-gradient(var(--success) ${Math.min(100, pctSonho) * 3.6}deg, var(--muted) 0deg)`,
           }}
         >
           <span className="flex h-full w-full flex-col items-center justify-center gap-0 rounded-full bg-card px-1 text-center">
-            <span className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Falta
             </span>
-            <span className="text-[10px] font-bold leading-tight text-success">
+            <span className="text-xs font-bold leading-tight text-success">
               {pctSonho >= 100
                 ? "Conquistada!"
                 : moeda(Math.max(0, metas.sonhoValor - metas.sonhoGuardado))}
             </span>
-            <span className="text-[8px] text-muted-foreground">
+            <span className="text-[10px] text-muted-foreground">
               {Math.round(Math.min(100, pctSonho))}%
             </span>
           </span>

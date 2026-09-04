@@ -120,7 +120,7 @@ function Index() {
           />
         </section>
 
-        <Tabs defaultValue="registrar">
+        <Tabs value={aba} onValueChange={setAba}>
           <TabsList>
             <TabsTrigger value="registrar">Registrar</TabsTrigger>
             <TabsTrigger value="relatorio">Relatório do dia</TabsTrigger>

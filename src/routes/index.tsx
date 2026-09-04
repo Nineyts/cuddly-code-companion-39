@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Emprestimos } from "@/components/Emprestimos";
+import { BotaoTema } from "@/components/BotaoTema";
 import {
   hojeISO,
   inicioDaSemanaISO,
@@ -94,9 +95,12 @@ function Index() {
               month: "long",
             })}
           </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-            Meu Controle Financeiro
-          </h1>
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Meu Controle Financeiro
+            </h1>
+            <BotaoTema />
+          </div>
           <p className="mt-3 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm font-medium text-foreground">
             💡 {motivacaoDoDia(hoje)}
           </p>

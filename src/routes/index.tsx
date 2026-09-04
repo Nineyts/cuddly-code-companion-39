@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Emprestimos } from "@/components/Emprestimos";
 import { BotaoTema } from "@/components/BotaoTema";
+import { Login, useUsuario } from "@/components/Login";
 import {
   hojeISO,
   inicioDaSemanaISO,
@@ -46,6 +47,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { nome, pronto: usuarioPronto, entrar, sair } = useUsuario();
   const { estado, pronto, adicionar, remover, salvarMetas, guardar } = useFinancas();
   const hoje = hojeISO();
   const semana = inicioDaSemanaISO();
@@ -86,6 +88,9 @@ function Index() {
     toast.success(tipo === "gasto" ? "Gasto registrado" : "Entrada registrada");
   }
 
+  if (!usuarioPronto) return null;
+  if (!nome) return <Login onEntrar={entrar} />;
+
   return (
     <main className="min-h-screen bg-background pb-16">
       <header className="border-b bg-card">
@@ -99,10 +104,17 @@ function Index() {
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Meu Controle Financeiro
+              Bem-vindo, {nome}!
             </h1>
-            <BotaoTema />
+            <div className="flex items-center gap-2">
+              <BotaoTema />
+              <Button variant="outline" size="sm" onClick={sair}>
+                Sair
+              </Button>
+            </div>
           </div>
+          <p className="mt-1 text-sm text-muted-foreground">Meu Controle Financeiro</p>
+
           <p className="mt-3 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm font-medium text-foreground">
             💡 {motivacaoDoDia(hoje)}
           </p>

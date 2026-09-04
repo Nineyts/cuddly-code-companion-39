@@ -363,7 +363,7 @@ function Index() {
                   <p className="text-sm text-muted-foreground">
                     {pctSonho >= 100
                       ? "Meta conquistada! Você provou que consegue."
-                      `: ""`}
+                      : ""}
                     {pctSonho < 100
                       ? `Faltam ${moeda(
                           Math.max(0, metas.sonhoValor - metas.sonhoGuardado),

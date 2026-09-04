@@ -75,6 +75,33 @@ export function motivacaoDoDia(dataISO: string) {
   return motivacoes[soma % motivacoes.length];
 }
 
+/** Guarda automaticamente um rascunho (campo de formulário, aba aberta, etc.). */
+export function useRascunho<T>(chave: string, inicial: T) {
+  const [valor, setValor] = useState<T>(inicial);
+  const [pronto, setPronto] = useState(false);
+
+  useEffect(() => {
+    try {
+      const bruto = localStorage.getItem(`rascunho:${chave}`);
+      if (bruto !== null) setValor(JSON.parse(bruto) as T);
+    } catch {
+      /* ignora rascunho inválido */
+    }
+    setPronto(true);
+  }, [chave]);
+
+  useEffect(() => {
+    if (!pronto) return;
+    try {
+      localStorage.setItem(`rascunho:${chave}`, JSON.stringify(valor));
+    } catch {
+      /* armazenamento indisponível */
+    }
+  }, [chave, valor, pronto]);
+
+  return [valor, setValor] as const;
+}
+
 export function useFinancas() {
   const [estado, setEstado] = useState<Estado>(estadoInicial);
   const [pronto, setPronto] = useState(false);

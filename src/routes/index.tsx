@@ -365,7 +365,12 @@ function Index() {
                       {moeda(metas.sonhoGuardado)} de {moeda(metas.sonhoValor)}
                     </span>
                   </div>
-                  <Progress value={Math.min(100, pctSonho)} />
+                  <Progress
+                    value={Math.min(100, pctSonho)}
+                    className="bg-success/20"
+                    indicatorClassName="bg-success"
+                  />
+
                   <p className="text-sm text-muted-foreground">
                     {pctSonho >= 100
                       ? "Meta conquistada! Você provou que consegue."

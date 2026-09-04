@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { Emprestimos } from "@/components/Emprestimos";
 import {
   hojeISO,
   inicioDaSemanaISO,
@@ -401,6 +402,10 @@ function Index() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="emprestimos" className="mt-4">
+            <Emprestimos />
           </TabsContent>
         </Tabs>
       </div>

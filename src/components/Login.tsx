@@ -64,7 +64,7 @@ export function Login({ onEntrar }: { onEntrar: (nome: string) => void }) {
                 id="nome"
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
-                placeholder="Ex: Daniel"
+                placeholder="Ex: Daniel Vorcaro"
                 autoFocus
               />
             </div>

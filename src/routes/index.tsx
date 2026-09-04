@@ -118,6 +118,7 @@ function Index() {
             <TabsTrigger value="registrar">Registrar</TabsTrigger>
             <TabsTrigger value="relatorio">Relatório do dia</TabsTrigger>
             <TabsTrigger value="metas">Metas</TabsTrigger>
+            <TabsTrigger value="emprestimos">Empréstimos</TabsTrigger>
           </TabsList>
 
           <TabsContent value="registrar" className="mt-4 grid gap-6">

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { Emprestimos } from "@/components/Emprestimos";
 import {
   hojeISO,
   inicioDaSemanaISO,
@@ -118,6 +119,7 @@ function Index() {
             <TabsTrigger value="registrar">Registrar</TabsTrigger>
             <TabsTrigger value="relatorio">Relatório do dia</TabsTrigger>
             <TabsTrigger value="metas">Metas</TabsTrigger>
+            <TabsTrigger value="emprestimos">Empréstimos</TabsTrigger>
           </TabsList>
 
           <TabsContent value="registrar" className="mt-4 grid gap-6">
@@ -400,6 +402,10 @@ function Index() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="emprestimos" className="mt-4">
+            <Emprestimos />
           </TabsContent>
         </Tabs>
       </div>

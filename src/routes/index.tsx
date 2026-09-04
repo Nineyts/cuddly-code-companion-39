@@ -16,6 +16,7 @@ import {
   motivacaoDoDia,
   resumo,
   useFinancas,
+  useRascunho,
   type Tipo,
 } from "@/lib/finance";
 

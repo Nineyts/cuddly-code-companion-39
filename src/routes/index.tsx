@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import {
   motivacaoDoDia,
   resumo,
   useFinancas,
+  useRascunho,
   type Tipo,
 } from "@/lib/finance";
 
@@ -49,11 +50,12 @@ function Index() {
   const hoje = hojeISO();
   const semana = inicioDaSemanaISO();
 
-  const [tipo, setTipo] = useState<Tipo>("gasto");
-  const [descricao, setDescricao] = useState("");
-  const [valor, setValor] = useState("");
-  const [data, setData] = useState(hoje);
-  const [aporte, setAporte] = useState("");
+  const [aba, setAba] = useRascunho("aba", "registrar");
+  const [tipo, setTipo] = useRascunho<Tipo>("tipo", "gasto");
+  const [descricao, setDescricao] = useRascunho("descricao", "");
+  const [valor, setValor] = useRascunho("valor", "");
+  const [data, setData] = useRascunho("data", hoje);
+  const [aporte, setAporte] = useRascunho("aporte", "");
 
   const dia = useMemo(
     () => resumo(estado.lancamentos, (l) => l.data === hoje),
@@ -118,7 +120,7 @@ function Index() {
           />
         </section>
 
-        <Tabs defaultValue="registrar">
+        <Tabs value={aba} onValueChange={setAba}>
           <TabsList>
             <TabsTrigger value="registrar">Registrar</TabsTrigger>
             <TabsTrigger value="relatorio">Relatório do dia</TabsTrigger>

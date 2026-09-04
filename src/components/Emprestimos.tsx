@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRascunho } from "@/lib/finance";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -104,12 +105,12 @@ function textoResumo(valor: number, dias: number, jurosPct: number, pessoa?: str
 export function Emprestimos() {
   const [lista, setLista] = useState<Emprestimo[]>([]);
   const [pronto, setPronto] = useState(false);
-  const [pessoa, setPessoa] = useState("");
-  const [valor, setValor] = useState("300");
-  const [dias, setDias] = useState("20");
-  const [jurosPct, setJurosPct] = useState("40");
-  const [modo, setModo] = useState<Modo>("dia");
-  const [inicio, setInicio] = useState(hojeISO());
+  const [pessoa, setPessoa] = useRascunho("emp:pessoa", "");
+  const [valor, setValor] = useRascunho("emp:valor", "300");
+  const [dias, setDias] = useRascunho("emp:dias", "20");
+  const [jurosPct, setJurosPct] = useRascunho("emp:jurosPct", "40");
+  const [modo, setModo] = useRascunho<Modo>("emp:modo", "dia");
+  const [inicio, setInicio] = useRascunho("emp:inicio", hojeISO());
   const [aberto, setAberto] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const hoje = hojeISO();

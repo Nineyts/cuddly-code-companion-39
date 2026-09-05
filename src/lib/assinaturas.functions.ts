@@ -187,10 +187,9 @@ export const renovarAssinatura = createServerFn({ method: "POST" })
     await exigirAdmin(context as never);
     const { data: r, error } = await context.supabase.rpc("renovar_assinatura", {
       _assinatura_id: data.assinatura_id,
-      _valor: data.valor ?? undefined,
       _origem: "manual",
-      _referencia: undefined,
       _regra: data.regra ?? "validade",
+      ...(data.valor !== undefined ? { _valor: data.valor } : {}),
     });
     if (error) throw new Error(error.message);
     return r;

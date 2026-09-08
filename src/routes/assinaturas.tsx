@@ -725,7 +725,7 @@ function AbaClientes({ clientes, onMudou }: { clientes: Cliente[]; onMudou: () =
 
 /* ================= PAGAMENTOS ================= */
 
-function AbaPagamentos({ painel }: { painel?: Painel }) {
+function AbaPagamentos({ painel }: { painel?: Painel | undefined }) {
   if (!painel) return null;
   const nomeCliente = (id: string) => painel.clientes.find((c) => c.id === id)?.nome ?? "—";
   const nomeSite = (assinaturaId: string) => {

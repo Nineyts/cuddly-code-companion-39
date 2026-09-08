@@ -79,6 +79,46 @@ function PaginaSite() {
         <main className="mx-auto max-w-3xl px-4 py-10">
           <p className="text-sm text-muted-foreground">Site de {data.cliente_nome}</p>
           <h1 className="mt-1 text-3xl font-bold text-foreground">{data.site_nome}</h1>
+
+          <div
+            className={`mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm ${
+              data.dias_restantes <= 5
+                ? "border-warning/40 bg-warning/10"
+                : "border-border bg-muted/40"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <span>
+                {data.dias_restantes < 0 ? (
+                  <>
+                    Assinatura <strong>vencida</strong> desde {dataBR(data.vencimento)}.
+                  </>
+                ) : data.dias_restantes === 0 ? (
+                  <>
+                    A mensalidade <strong>vence hoje</strong> ({dataBR(data.vencimento)}).
+                  </>
+                ) : data.dias_restantes === 1 ? (
+                  <>
+                    Falta <strong>1 dia</strong> para a próxima mensalidade (
+                    {dataBR(data.vencimento)}).
+                  </>
+                ) : (
+                  <>
+                    Faltam <strong>{data.dias_restantes} dias</strong> para a próxima mensalidade (
+                    {dataBR(data.vencimento)}).
+                  </>
+                )}
+              </span>
+            </div>
+            {data.dias_restantes <= 5 && (
+              <Button size="sm" onClick={() => setPagamentoAberto(true)}>
+                <CreditCard className="h-4 w-4" />
+                Pagar agora ({moeda(data.valor)})
+              </Button>
+            )}
+          </div>
+
           <div
             className="prose mt-6 max-w-none whitespace-pre-wrap text-foreground"
             dangerouslySetInnerHTML={{ __html: data.conteudo }}

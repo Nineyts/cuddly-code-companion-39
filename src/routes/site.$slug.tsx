@@ -1,12 +1,16 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Ban, Clock, CreditCard, Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { verificarSite } from "@/lib/assinaturas.functions";
+import { criarCobrancaMensalidade } from "@/lib/pagamentos.functions";
 import { dataBR, moeda } from "@/lib/assinaturas";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -193,14 +197,23 @@ function DialogoPagamento({
   valor: number;
   vencimento: string;
 }) {
-  const [avisoEnviado, setAvisoEnviado] = useState(false);
+  const { slug } = useParams({ from: "/site/$slug" });
+  const [nome, setNome] = useState("");
+  const [documento, setDocumento] = useState("");
+  const criar = useServerFn(criarCobrancaMensalidade);
+
+  const cobrar = useMutation({
+    mutationFn: () => criar({ data: { slug, nome, documento } }),
+    onError: (e: Error) => toast.error(e.message),
+  });
+  const cobranca = cobrar.data;
 
   return (
     <Dialog
       open={aberto}
       onOpenChange={(o) => {
         if (!o) {
-          setAvisoEnviado(false);
+          cobrar.reset();
           onFechar();
         }
       }}
@@ -214,34 +227,85 @@ function DialogoPagamento({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3 rounded-lg border bg-muted/40 p-4 text-sm">
-          <p className="font-medium text-foreground">Como funciona:</p>
-          <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-            <li>Realize o pagamento da mensalidade combinado com o administrador.</li>
-            <li>Assim que o pagamento for confirmado, a assinatura é renovada automaticamente pelo período do plano.</li>
-            <li>O site é liberado na hora, sem reinstalação.</li>
-          </ol>
-          <p className="text-xs text-muted-foreground">
-            A confirmação é feita no servidor — por gateway de pagamento (webhook) ou manualmente
-            pelo administrador — garantindo que o site só seja liberado após pagamento real.
-          </p>
-        </div>
+        {cobranca ? (
+          <div className="space-y-3">
+            {cobranca.qrCodeImagem && (
+              <img
+                src={
+                  cobranca.qrCodeImagem.startsWith("data:")
+                    ? cobranca.qrCodeImagem
+                    : `data:image/png;base64,${cobranca.qrCodeImagem}`
+                }
+                alt="QR Code do Pix da mensalidade"
+                className="mx-auto h-48 w-48 rounded-lg border bg-card p-2"
+              />
+            )}
+            {cobranca.pixCopiaECola && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-foreground">Pix copia e cola</p>
+                <textarea
+                  readOnly
+                  value={cobranca.pixCopiaECola}
+                  className="h-24 w-full rounded-md border bg-muted/40 p-2 text-xs text-muted-foreground"
+                />
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    void navigator.clipboard.writeText(cobranca.pixCopiaECola ?? "");
+                    toast.success("Código Pix copiado!");
+                  }}
+                >
+                  Copiar código Pix
+                </Button>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Assim que o pagamento for confirmado, a assinatura é renovada e o site liberado
+              automaticamente.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <Label htmlFor="pg-nome">Nome completo</Label>
+              <Input
+                id="pg-nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                placeholder="Ex: Daniel Vorcaro"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="pg-doc">CPF ou CNPJ</Label>
+              <Input
+                id="pg-doc"
+                value={documento}
+                onChange={(e) => setDocumento(e.target.value)}
+                placeholder="12345678909"
+                inputMode="numeric"
+              />
+            </div>
+          </div>
+        )}
 
         <DialogFooter>
           <Button variant="outline" onClick={onFechar}>
             Fechar
           </Button>
-          <Button
-            disabled={avisoEnviado}
-            onClick={() => {
-              setAvisoEnviado(true);
-              toast.success("Aviso enviado! Assim que o pagamento for confirmado, seu site será liberado.");
-            }}
-          >
-            {avisoEnviado ? "Aviso enviado" : "Já realizei o pagamento"}
-          </Button>
+          {!cobranca && (
+            <Button disabled={cobrar.isPending} onClick={() => cobrar.mutate()}>
+              {cobrar.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <CreditCard className="h-4 w-4" />
+              )}
+              Gerar pagamento Pix
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+

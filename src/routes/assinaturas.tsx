@@ -232,7 +232,7 @@ function AbaSites({
   clientes,
   onMudou,
 }: {
-  linhas: { site: Site; ass?: Assinatura; cliente?: Cliente; status: Status }[];
+  linhas: { site: Site; ass: Assinatura | undefined; cliente: Cliente | undefined; status: Status }[];
   clientes: Cliente[];
   onMudou: () => void;
 }) {

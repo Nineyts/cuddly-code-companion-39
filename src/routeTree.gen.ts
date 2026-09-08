@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssinaturasRouteImport } from './routes/assinaturas'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SiteSlugRouteImport } from './routes/site.$slug'
+import { Route as ApiPublicMisticpayRouteImport } from './routes/api/public/misticpay'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const SiteSlugRoute = SiteSlugRouteImport.update({
   path: '/site/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicMisticpayRoute = ApiPublicMisticpayRouteImport.update({
+  id: '/api/public/misticpay',
+  path: '/api/public/misticpay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assinaturas': typeof AssinaturasRoute
   '/auth': typeof AuthRoute
   '/site/$slug': typeof SiteSlugRoute
+  '/api/public/misticpay': typeof ApiPublicMisticpayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assinaturas': typeof AssinaturasRoute
   '/auth': typeof AuthRoute
   '/site/$slug': typeof SiteSlugRoute
+  '/api/public/misticpay': typeof ApiPublicMisticpayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,21 @@ export interface FileRoutesById {
   '/assinaturas': typeof AssinaturasRoute
   '/auth': typeof AuthRoute
   '/site/$slug': typeof SiteSlugRoute
+  '/api/public/misticpay': typeof ApiPublicMisticpayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assinaturas' | '/auth' | '/site/$slug'
+  fullPaths:
+    '/' | '/assinaturas' | '/auth' | '/site/$slug' | '/api/public/misticpay'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assinaturas' | '/auth' | '/site/$slug'
-  id: '__root__' | '/' | '/assinaturas' | '/auth' | '/site/$slug'
+  to: '/' | '/assinaturas' | '/auth' | '/site/$slug' | '/api/public/misticpay'
+  id:
+    | '__root__'
+    | '/'
+    | '/assinaturas'
+    | '/auth'
+    | '/site/$slug'
+    | '/api/public/misticpay'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +83,7 @@ export interface RootRouteChildren {
   AssinaturasRoute: typeof AssinaturasRoute
   AuthRoute: typeof AuthRoute
   SiteSlugRoute: typeof SiteSlugRoute
+  ApiPublicMisticpayRoute: typeof ApiPublicMisticpayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +116,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/misticpay': {
+      id: '/api/public/misticpay'
+      path: '/api/public/misticpay'
+      fullPath: '/api/public/misticpay'
+      preLoaderRoute: typeof ApiPublicMisticpayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +131,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssinaturasRoute: AssinaturasRoute,
   AuthRoute: AuthRoute,
   SiteSlugRoute: SiteSlugRoute,
+  ApiPublicMisticpayRoute: ApiPublicMisticpayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

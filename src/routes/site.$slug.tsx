@@ -1,12 +1,16 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Ban, Clock, CreditCard, Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { verificarSite } from "@/lib/assinaturas.functions";
+import { criarCobrancaMensalidade } from "@/lib/pagamentos.functions";
 import { dataBR, moeda } from "@/lib/assinaturas";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,

@@ -161,6 +161,24 @@ function PainelAssinaturas() {
               <RefreshCw className="h-4 w-4" /> Atualizar
             </Button>
             <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (!painel.data) return;
+                const blob = new Blob([JSON.stringify(painel.data, null, 2)], {
+                  type: "application/json",
+                });
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = `backup-assinaturas-${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+                toast.success("Backup baixado com sucesso.");
+              }}
+            >
+              <Download className="h-4 w-4" /> Backup
+            </Button>
+            <Button
               variant="ghost"
               size="sm"
               onClick={async () => {

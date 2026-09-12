@@ -6,6 +6,7 @@ import {
   CalendarClock,
   CircleCheck,
   CircleDollarSign,
+  Download,
   Clock,
   History,
   Loader2,

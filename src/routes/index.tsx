@@ -107,6 +107,9 @@ function Index() {
               Bem-vindo, {nome}!
             </h1>
             <div className="flex items-center gap-2">
+              <Button asChild variant="outline" size="sm">
+                <a href="/assinaturas">Painel de assinaturas</a>
+              </Button>
               <BotaoTema />
               <Button variant="outline" size="sm" onClick={sair}>
                 Sair
